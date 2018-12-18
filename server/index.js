@@ -1,6 +1,7 @@
 var express = require("express");
 var app = express();
 var path = require("path");
+var apimedic = require('./apimedic');
 app.use(express.static(path.resolve(__dirname,"../client")));
 
 var http = require('http').Server(app);
@@ -12,10 +13,11 @@ app.get('/',function(req,res){
 
 io.on('connection', function(socket){
 	console.log('connection established')
-  socket.on('chat_message', function(msg){
-  	//msg is the input received from the user
-  	//Process it and extract key words before performing request to apiMedic
-  });
+	console.log(apimedic)
+    socket.on('chat_message', function(msg){
+		symptoms_list = apimedic.parse_symptoms(msg);
+		console.log(apimedic.get_diagnosis(symptoms_list));	
+    });
 });
 
 //create APIs
