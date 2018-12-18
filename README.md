@@ -1,96 +1,163 @@
-<p align="center">
-    <a href="https://github.com/luixaviles/socket-io-typescript-chat">
-        <img src="https://img.shields.io/github/stars/luixaviles/socket-io-typescript-chat.svg?style=social&label=Star" alt="GitHub stars">
-    </a>
-    <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fluixaviles%2Fsocket-io-typescript-chat&via=luixaviles&text=Take%20a%20look%20this%20%23TypeScript%20chat%20project%20using%20%23Node%20and%20%23Angular%20Material">
-        <img src="https://img.shields.io/twitter/url/https/github.com/luixaviles/socket-io-typescript-chat.svg?style=social" alt="Tweet">
-    </a>
-</p>
+# Angular-UI-Chat
+=========
 
-A Socket.io Chat Example Using TypeScript
-=========================================
+A small library for making a custom chatroom.  This addon is purely front-end so how you send data to it is up to you.
 
-This repository contains server & client side code using `TypeScript` language
+![chatdemo](https://cloud.githubusercontent.com/assets/11771776/13540000/0748f90c-e222-11e5-8eaf-880b9cd373f9.gif)
 
-## Blog Post
-Read the blog post with details about this project: [Real Time Apps with TypeScript: Integrating Web Sockets, Node & Angular](https://medium.com/dailyjs/real-time-apps-with-typescript-integrating-web-sockets-node-angular-e2b57cbd1ec1) 
+## Dependencies
+  Angular 1.x
 
-## Live Demo
-Try live demo: [https://typescript-chat.firebaseapp.com](https://typescript-chat.firebaseapp.com)
+## Installation
 
-# Support this project
-- Star GitHub repository :star:
-- Create pull requests, submit bugs or suggest new features
-- Follow updates on [Twitter](https://twitter.com/luixaviles) or [Github](https://github.com/luixaviles)
+  npm install angular-ui-chat --save
 
-![](https://luixaviles.com/assets/images/posts/typescript-chat/typescript-chat.gif?raw=true)
+## Feature Roadmap
 
-# Running Server and Client locally
-## Prerequisites
+  - [x] Basic functionality (plain text)
+  - [x] User Message Callback
+  - [x] Curse Word Filters
+  - [x] [Emoticons](http://www.emoji-cheat-sheet.com/)
+  - [x] Mobile Friendly
+  - [x] User Images
+  - [x] Collapsable user name list
+  - [x] Private Messages
+  - [x] Admin abilities
+  - [x] Parse on key up Emoticons/PM/Mention
+  - [x] HTML - bold
+  - [x] HTML - underline
+  - [x] HTML - italics
+  - [ ] HTML - links
+  - [ ] HTML - size increase
+  - [ ] HTML - images
+  - [ ] User Settings
+  - [ ] Custom User Levels
+  - [ ] Themes
 
-First, ensure you have the following installed:
+## Usage
 
-1. NodeJS - Download and Install latest version of Node: [NodeJS](https://nodejs.org)
-2. Git - Download and Install [Git](https://git-scm.com)
-3. Angular CLI - Install Command Line Interface for Angular [https://cli.angular.io/](https://cli.angular.io/)
+  1. run npm install angular-ui-chat
+  2. include the .min.js and the .min.css file from the dist/ folder in your project.
+  3. Add 'ui-chat' to your angular dependencies
+  4. Add to your html
 
-After that, use `Git bash` to run all commands if you are on Windows platform.
+  ```html
 
-## Clone repository
+    <ui-chat chatoptions="uiChatOptions" chatmessage="messageCallbackFunction" chattyping="isTypingCallbackFunction" chatprivatemessage="chatPrivateMessageCallbackFunction" chatmessagedelete="messageDeleteCallbackFunction"></ui-chat>
 
-In order to start the project use:
+  ```
 
-```bash
-$ git clone https://github.com/luixaviles/socket-io-typescript-chat.git
-$ cd socket-io-typescript-chat
-```
+  5. In your controller create an optionsObject and a message callback function (DO NOT include parenthesis () in the html!)
 
-## Run Server
+  ```javascript
 
-To run server locally, just install dependencies and run `gulp` task to create a build:
+    $scope.uiChatOptions = {
+      //'left' or 'right'; defaults to right
+      usersListSide: 'right',
+      //if set to twa, the cha t will filter for twemoji awesome
+      emoji: 'twa',
+      curseFilter: true,
+      //start this will parse items in the input box on key up
+      mentionParse: true,
+      emojiParse: true,
+      pmParse: true,
+      //object to enable html input / false to disable
+      html: {
+        italicize: true,
+        bold: true,
+        underline: true
+      },
+      //end input box filters
+      defaultCurseReplacer: '$|^&!',
+      users: [arrayOfUsersInChat],
+      user: {userObject},
+      userFeedback: {
+        message: 'soandso is typing a message',
+      },
+      messages: [messagesFromUsersInChat]
+    };
 
-```bash
-$ cd server
-$ npm install -g gulp-cli
-$ npm install
-$ gulp build
-$ npm start
-```
+    $scope.messageCallbackFunction = function(messageObject){
+      //process message here whenever message received
+      //you can also alter the message here and return the change
+      return messageObject;
+    };
 
-The `socket.io` server will be running on port `8080`
+    $scope.isTypingCallbackFunction = function(lengthOfCharacters){
+      //process is activity here for user is typing...
+    };
 
-## Run Angular Client
+    $scope.chatPrivateMessageCallbackFunction = function(messageObject, userObject){
+      //process message here whenever a private message is sent from the client user
+      //you can also alter the message here and return the change
+      return messageObject;
+    };
 
-Open other command line window and run following commands:
+    $scope.messageDeleteCallbackFunction = function(messageObject){
+      //call for when an admin wants to delete a message
+    };
 
-```bash
-$ cd client
-$ npm install
-$ ng serve
-```
+  ```
 
-Now open your browser in following URL: [http://localhost:4200](http://localhost:4200/)
+  6. Each array is an array of objects, the following should be contained in each.  User is an object of the user that is the owner of the chat instance.  For security reasons it is not recommended to include user email addresses in calls related to chat functionality, this would leave anyone in the live chat open to having their emails scraped by a bot.
 
-# Forks
-The Open Source community is awesome! If you're working in a fork with other tech stack, please add the reference of your project here:
+  ```javascript
 
-| Features                                  | Author                        | Status    |
-|-------------------------------------------|-------------------------------|-----------|
-| [React + TypeScript + Material-UI client](https://github.com/nilshartmann/socket-io-typescript-chat/tree/react-client/client-react)   | [nilshartmann](https://github.com/nilshartmann)   | In Progress   |
+    var arrayOfUsersInChat = [userObject, userObject];
+    arrayOfUsersInChat.push(userObject);
 
+  ```
 
-# Contribution
-Contributions are greatly appreciated. You can contribute by adding `i18n` support with your language, the testing section or any other feature.
+  ```javascript
 
-# Contributors
-[<img alt="luixaviles" src="https://avatars0.githubusercontent.com/u/3485075?v=4&s=117" width="117">](https://github.com/luixaviles) | [<img alt="hughanderson4" src="https://avatars2.githubusercontent.com/u/2387520?v=4&s=117" width="117">](https://github.com/hughanderson4) | [<img alt="ultrarunner" src="https://avatars2.githubusercontent.com/u/1048799?v=4&s=117" width="117">](https://github.com/ultrarunner) | [<img alt="theIDinside" src="https://avatars2.githubusercontent.com/u/25328813?v=4&s=117" width="117">](https://github.com/theIDinside) | [<img alt="carmius" src="https://avatars2.githubusercontent.com/u/16904101?v=4&s=117" width="117">](https://github.com/carmius) | [<img alt="Hellmy" src="https://avatars2.githubusercontent.com/u/2045678?v=4&s=117" width="117">](https://github.com/Hellmy) | 
-:---: |:---: |:---: |:---: |:---: |:---: |
-[luixaviles](https://github.com/luixaviles) |[hughanderson4](https://github.com/hughanderson4) |[ultrarunner](https://github.com/ultrarunner) |[theIDinside](https://github.com/theIDinside) |[carmius](https://github.com/carmius) |[Hellmy](https://github.com/Hellmy) |
+    var messagesFromUsersInChat = [];
+    messagesFromUsersInChat.push({
+      //the same userobject as listed below.
+      user: {userObject},
+      //the message sent
+      message: 'message sent by user',
+      id: 'unique id(optional)',
+      //time of the messages
+      time: new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
+      //if it is a private message
+      private: {
+        //who our client is having a conversation with
+        user: userObject,
+        //if the message is from the client to private user
+        from: true,
+        //if the message is to the client from private user
+        to: true,
+      },
+    });
 
-[<img alt="you" src="http://fuuse.net/wp-content/uploads/2016/02/avatar-placeholder.png" width="117">](https://github.com/luixaviles) |
-:---: |
-[You](https://github.com/luixaviles) |
+  ```
 
-## License
+  ```javascript
 
-MIT
+    var userObject = {};
+    userObject = {
+      username: 'what to display',
+      id: 'unique id(optional)',
+      image: 'an image for the user',
+      //if you want to use gravatar you should generate the links server side and pass it into this image field
+      admin: false, // or true if they are a chat admin,
+      //use left or right to display which side the users image should be on
+      side: 'left'
+    };
+
+  ```
+
+## Tests
+
+  npm test
+
+## Contributing
+
+In lieu of a formal styleguide, take care to maintain the existing coding style.  Lint and test your code.  To build use grunt dist. To develop use grunt dev.  Use a different branch and send a pull request to contribute.
+
+## About
+  This project is sponsered by [ITProTV](http://www.itpro.tv/)
+
+## Release History
+
+[VERSION.MD](VERSION.md)
