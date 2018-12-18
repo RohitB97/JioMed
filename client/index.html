@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html ng-app="ui-chat">
+<html>
 <head>
- <title>ChatBot</title>
-
- <!-- Importing all JS files -->
- <link rel="stylesheet/less" href="styles/ui-chat.less">
- <link rel="stylesheet/less" href="styles/twemoji-awesome.less">
- <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
- <script src="app.js"></script>
- <script src="/socket.io/socket.io.js"></script>
-  <script>
-    var socket = io();
-  </script>
+	<title></title>
 </head>
-
 <body>
-  <ui-chat chatoptions="chatoptions" chatmessage="messageCallbackFunction" chattyping="isTypingCallbackFunction" chatprivatemessage="chatPrivateMessageCallbackFunction" chatmessagedelete="messageDeleteCallbackFunction"></ui-chat>
+	<div ng-app="myapp" ng-controller="chatCtrl" class="chat-container">
+		<h1 style="text-align: center;">Name of chat bot</h1>
+		<hr>
+		<div ng-repeat="chat in chats" class="chatbox" ng-class="{'client-style': chat.user, 'server-style': !chat.user}">
+			{{chat.message}}
+		</div>
+		<input type="text" name="message" style="width: 90%; height: 30px;" ng-model="msg">
+		<div style="display: inline-block; width: 9%; height: 30px; background-color: #0000ee" ng-click="sendmsg()">Send</div>
+	</div>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-route.min.js"></script>
+	<script src="./index.js"></script>
+	<link rel="stylesheet" type="text/css" href="./main.css">
 </body>
 </html>

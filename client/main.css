@@ -1,0 +1,23 @@
+.chat-container{
+	width: 70%;
+	border: 1px solid black;
+	margin: auto;
+}
+
+.chatbox{
+	width: 20%;
+	padding: 5px;
+	border-radius: 10px;
+	margin: 5px;
+}
+
+.client-style{
+	margin-left: 78%;
+	text-align: right;
+	background-color: #00ee00;
+}
+
+.server-style{
+	text-align: left;
+	background-color: #eeee00;
+}
