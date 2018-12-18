@@ -1,35 +1,5 @@
 var socket = io();
 
-angular.module('myapp', [])
-	.controller('chatCtrl', function($scope){
-		$scope.chats = [{
-			message: 'hello',
-			user: 0
-		}, {
-			message: 'how are you?',
-			user: 1
-		}];
-
-		$scope.sendmsg = function(){
-			if($scope.msg.trim() != ""){
-				socket.emit("chat_message", $scope.msg.trim());
-				$scope.chats.push({
-					message: $scope.msg,
-					user: 1
-				});
-				$scope.msg = "";
-				socket.on('chat_response', function(msg){
-					console.log('received response back: ' + msg)
-					$scope.chats.push({
-						message: msg,
-						user: 0
-					});
-				});
-			}
-		}
-
-	});
-
 (function () {
     var Message;
     Message = function (arg) {
@@ -68,6 +38,17 @@ angular.module('myapp', [])
                 message_side: message_side
             });
             message.draw();
+            socket.emit('chat_message', text);
+            	console.log('comes here')
+            
+            socket.on('chat_response', function(msg){
+            	message_side = message_side === 'right'? 'left': 'right';
+            	message = new Message({
+            		text: msg,
+            		message_side: message_side
+            	});
+            	message.draw();
+            })
             return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         };
         $('.send_message').click(function (e) {
@@ -78,12 +59,5 @@ angular.module('myapp', [])
                 return sendMessage(getMessageText());
             }
         });
-        sendMessage('Hello Philip! :)');
-        setTimeout(function () {
-            return sendMessage('Hi Sandy! How are you?');
-        }, 1000);
-        return setTimeout(function () {
-            return sendMessage('I\'m fine, thank you!');
-        }, 2000);
     });
 }.call(this));
