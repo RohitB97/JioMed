@@ -4,7 +4,9 @@
   "main": "server/app.js",
   "dependencies": {
     "express": "^4.16.4",
-    "socket.io": "^2.2.0",
-    "path": "^0.12.7"
+    "fuse.js": "^3.3.0",
+    "path": "^0.12.7",
+    "request": "^2.88.0",
+    "socket.io": "^2.2.0"
   }
 }
