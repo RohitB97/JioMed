@@ -129,6 +129,27 @@
     return {
       restrict: 'E',
       controller: function($log, $scope) {
+        $scope.chatoptions = {
+          usersListSide: 'right',
+          emoji: 'lol',
+          curseFilter: false,
+          mentionParse: true,
+          emojiParse: false,
+          pmParse: true,
+          html: {
+            italicize: true,
+            bold: true,
+            underline: true
+          },
+          defaultCurseReplacer: '$|^&!',
+          users: [arrayOfUsersInChat],
+          user: {userObject},
+          userFeedback: {
+            message: 'soandso is typing a message',
+          },
+          messages: [messagesFromUsersInChat]
+        };
+
         $scope.htmlPopup = false;
         if($scope.chatoptions.emoji === 'twa'){
           if(require){

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html ng-app="ui-chat">
+<head>
+ <title>ChatBot</title>
+
+ <!-- Importing all JS files -->
+ <link rel="stylesheet/less" href="styles/ui-chat.less">
+ <link rel="stylesheet/less" href="styles/twemoji-awesome.less">
+ <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
+ <script src="app.js"></script>
+</head>
+
+<body>
+  <ui-chat chatoptions="chatoptions" chatmessage="messageCallbackFunction" chattyping="isTypingCallbackFunction" chatprivatemessage="chatPrivateMessageCallbackFunction" chatmessagedelete="messageDeleteCallbackFunction"></ui-chat>
+</body>
+</html>
