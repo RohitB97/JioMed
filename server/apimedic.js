@@ -39,13 +39,13 @@ var fuse_weak = new Fuse(symptoms, fuse_options_weak);
 
 function get_symptom_id(symptom_name){
     var search_res = fuse.search(symptom_name);
-    console.log(search_res)
+    // console.log(search_res)
     if(search_res.length > 0)
         return search_res[0].item.ID;
     else{
         weak_search = fuse_weak.search(symptom_name).slice(0,10);
         
-        console.log(weak_search)
+        // console.log(weak_search)
         if(weak_search.length > 0)
             return weak_search[0].item.ID;
         else
@@ -73,7 +73,7 @@ function get_diagnosis(symptom_names, cb){
 
 function get_suggestions(symptom_names, cb){
     symptom_ids = symptom_names.map(get_symptom_id)
-    console.log(symptom_ids)
+    // console.log(symptom_ids)
     request.get({
         url: 'https://sandbox-healthservice.priaid.ch/symptoms/proposed',
         qs: {

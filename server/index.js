@@ -15,7 +15,7 @@ io.on('connection', function(socket){
 	console.log(apimedic)
 	socket.on('chat_message', function(msg){
 		symptoms_list = apimedic.parse_symptoms(msg);
-		console.log(apimedic.get_diagnosis(symptoms_list));
+		console.log(apimedic.get_diagnosis(symptoms_list, data => {console.log(data);}));
 		io.emit('chat_response', msg + "x");
 	});
 });
