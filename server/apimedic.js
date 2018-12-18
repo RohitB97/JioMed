@@ -1,6 +1,9 @@
 var request = require('request');
 var fs = require('fs');
 var Fuse = require('fuse.js');
+var path = require('path');
+
+var SERVER_ROOT = path.join(__dirname, "..");
 
 var API_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZpZ25lc2htNjI1QGdtYWlsLmNvbSIsInJvbGUiOiJVc2VyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc2lkIjoiMTY4NiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvdmVyc2lvbiI6IjEwOCIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbGltaXQiOiIxMDAiLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL21lbWJlcnNoaXAiOiJCYXNpYyIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbGFuZ3VhZ2UiOiJlbi1nYiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZXhwaXJhdGlvbiI6IjIwOTktMTItMzEiLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL21lbWJlcnNoaXBzdGFydCI6IjIwMTgtMTItMTgiLCJpc3MiOiJodHRwczovL2F1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE1NDUxNjkxNDMsIm5iZiI6MTU0NTE2MTk0M30.FlRLhB5DyJXdnyPdwxDmbzCpD1L_NTc5PJj2pZIlpTk'
 // sandbox
@@ -15,13 +18,13 @@ function get_symptom_list(){
             language: 'en-gb'
         }
     }, function (error, response, body) {
-        fs.writeFile('symptoms.json', body, function(err){
+        fs.writeFile(SERVER_ROOT+'/server/symptoms.json', body, function(err){
             if(err) console.log(err);
         })
     });
 }
 
-var symptoms = JSON.parse(fs.readFileSync('symptoms.json'));
+var symptoms = JSON.parse(fs.readFileSync(SERVER_ROOT+'/server/symptoms.json'));
 var fuse_options = {
     shouldSort: true,
     includeScore: true,
