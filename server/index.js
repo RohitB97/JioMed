@@ -12,9 +12,11 @@ app.get('/',function(req,res){
 
 io.on('connection', function(socket){
 	console.log('connection established')
-  socket.on('chat_message', function(msg){
-  	//msg is the input received from the user
-  	//Process it and extract key words before performing request to apiMedic
+  	socket.on('chat_message', function(msg){
+	  	//msg is the input received from the user
+	  	//Process it and extract key words before performing request to apiMedic
+	  	console.log('received message');
+	  	io.emit('chat_response', msg + "x");
   });
 });
 
