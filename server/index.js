@@ -75,6 +75,7 @@ io.on('connection', function(socket){
 								response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
 								if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
 							})
+							response = response + '<a href="#"> Chat with a doctor </a>';
 							io.emit('chat_response', response)
 							state = 'FREE';
 							full_symptoms_list = [];
