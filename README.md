@@ -19,7 +19,7 @@ Dependencies :-
 * request-promises
 
 ## Build procedure :-
-* npm install
-* node server/index.js (sets up the server on port 3000)
-(Open another shell)
-* node docapp/server/index.js (sets up additional server on 4000)
+> npm install
+> node server/index.js (sets up the server on port 3000)
+* (Open another shell)
+> node docapp/server/index.js (sets up additional server on 4000)
