@@ -16,7 +16,7 @@ io.on('connection', function(socket){
 	var full_symptoms_list = [];
 	var suggestions_list = [];
 
-	io.emit('chat_response', "Would you like to </br>1) Diagnose your symptoms , or</br>2) Check Disease Information?");
+	io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 	socket.on('chat_message', function(msg){
 		if(state == 'FREE'){
 			if(parseInt(msg) == 2){
@@ -34,7 +34,7 @@ io.on('connection', function(socket){
 					'</br>Treatment: ' + data.TreatmentDescription + '</br>'
 				io.emit('chat_response', response)
 				state = 'FREE'
-				io.emit('chat_response', "Would you like to </br>1) Diagnose your symptoms , or</br>2) Check Disease Information?");
+				io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 			})
 		} else if(state == 'SYMPT'){
 			// get initial symptoms list
@@ -52,7 +52,7 @@ io.on('connection', function(socket){
 						if(data.length == 0){
 							io.emit('chat_response', 'No diagnosis available.')
 							state = 'FREE';
-							io.emit('chat_response', "Would you like to </br>1) Diagnose your symptoms , or</br>2) Check Disease Information?");
+							io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 							full_symptoms_list = [];
 							suggestions_list = [];
 						} else {
@@ -64,7 +64,7 @@ io.on('connection', function(socket){
 							})
 							io.emit('chat_response', response)
 							state = 'FREE';
-							io.emit('chat_response', "Would you like to </br>1) Diagnose your symptoms , or</br>2) Check Disease Information?");
+							io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 							full_symptoms_list = [];
 							suggestions_list = [];
 						}
@@ -90,7 +90,7 @@ io.on('connection', function(socket){
 					if(data.length == 0){
 						io.emit('chat_response', 'No diagnosis available.')
 						state = 'FREE';
-						io.emit('chat_response', "Would you like to </br>1) Diagnose your symptoms , or</br>2) Check Disease Information?");
+						io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 						full_symptoms_list = [];
 						suggestions_list = [];
 					} else {
@@ -105,7 +105,7 @@ io.on('connection', function(socket){
 							response = response + '<a href="#"> Chat with a doctor </a>';
 							io.emit('chat_response', response)
 							state = 'FREE';
-							io.emit('chat_response', "Would you like to </br>1) Diagnose your symptoms , or</br>2) Check Disease Information?");
+							io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 							full_symptoms_list = [];
 							suggestions_list = [];
 						})
@@ -129,8 +129,8 @@ io.on('connection', function(socket){
 							if(data.length == 0){
 								io.emit('chat_response', 'No diagnosis available.')
 								state = 'FREE';
-								io.emit('chat_response', "Would you like to </br>1) Diagnose your symptoms , or</br>2) Check Disease Information?");
-								full_symptoms_list = [];
+								io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
+							full_symptoms_list = [];
 								suggestions_list = [];
 							} else {
 								var response = "Your diagnosis is:</br>";
@@ -141,8 +141,8 @@ io.on('connection', function(socket){
 								})
 								io.emit('chat_response', response)
 								state = 'FREE';
-								io.emit('chat_response', "Would you like to </br>1) Diagnose your symptoms , or</br>2) Check Disease Information?");
-								full_symptoms_list = [];
+								io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
+							full_symptoms_list = [];
 								suggestions_list = [];
 							}
 						})
