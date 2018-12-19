@@ -14,6 +14,13 @@
 # dependencies
 /client/node_modules
 
+/docapp/node_modules
+/docapp/client/dist
+/docapp/client/tmp
+/docapp/server/node_modules
+/docapp/server/dist
+/docapp/server/npm-debug.log
+
 # misc
 /client/npm-debug.log
 
