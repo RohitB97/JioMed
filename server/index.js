@@ -34,10 +34,10 @@ io.on('connection', function(socket){
 						if(data.length == 0){
 							io.emit('chat_response', 'No diagnosis available.')
 						} else {
-							var response = "Your diagnosis is:\n";
+							var response = "Your diagnosis is:</br>";
 							console.log(data)
 							data.forEach(function(value, index){
-								response = response + String(index+1) + ') ' + value.Issue.Name + '\n';
+								response = response + String(index+1) + ') ' + value.Issue.Name + '</br>';
 							})
 							io.emit('chat_response', response)
 							state = 'FREE';
@@ -63,10 +63,10 @@ io.on('connection', function(socket){
 					if(data.length == 0){
 						io.emit('chat_response', 'No diagnosis available.')
 					} else {
-						var response = "Your diagnosis is:\n";
+						var response = "Your diagnosis is:</br>";
 						console.log(data)
 						data.forEach(function(value, index){
-							response = response + String(index+1) + ') ' + value.Issue.Name + '\n';
+							response = response + String(index+1) + ') ' + value.Issue.Name + '</br>';
 						})
 						io.emit('chat_response', response)
 						state = 'FREE';
@@ -89,10 +89,10 @@ io.on('connection', function(socket){
 							if(data.length == 0){
 								io.emit('chat_response', 'No diagnosis available.')
 							} else {
-								var response = "Your diagnosis is:\n";
+								var response = "Your diagnosis is:</br>";
 								console.log(data)
 								data.forEach(function(value, index){
-									response = response + String(index+1) + ') ' + value.Issue.Name + '\n';
+									response = response + String(index+1) + ') ' + value.Issue.Name + '</br>';
 								})
 								io.emit('chat_response', response)
 								state = 'FREE';

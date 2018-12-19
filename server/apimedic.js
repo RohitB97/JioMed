@@ -70,7 +70,7 @@ function get_diagnosis(symptom_names, cb){
             language: 'en-gb'
         }
     }, function (error, response, body) {
-        cb(JSON.parse(body));
+        cb(JSON.parse(body).slice(5));
     });
 }
 
