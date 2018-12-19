@@ -64,15 +64,16 @@ io.on('connection', function(socket){
 		} else if(state == 'AGE'){
 			age = parseInt(msg);
 			console.log(age);
-			io.emit('chat_response', 'Enter gender for diagnosis')
+			io.emit('chat_response', 'Enter gender for diagnosis</br>1) Male</br>2) Female</br>3) Other')
 			state = 'GENDER'
 		} else if(state == 'GENDER'){
-			if(msg.length > 0) {
-				if(msg[0].toLowerCase() == 'm')
-					gender = 'male'
-				else
-					gender = 'female'
-			}
+			gender = parseInt(msg);
+			if(gender==3) 
+				gender = 'Other'
+			else if(gender==2)
+				gender = 'Female'
+			else
+				gender = 'Male'
 			console.log(age, gender);
 			io.emit('chat_response', 'What are your symptoms?')
 			state = 'SYMPT'

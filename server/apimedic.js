@@ -71,7 +71,8 @@ function get_symptom(symptom_name){
 }
 
 function get_diagnosis(symptom_names, age, gender, cb){
-    if(gender === undefined) gender = 'male'
+    if(gender === undefined || gender == "Other") gender = 'male'
+    gender = gender.toLowerCase()
     if(age === undefined) age = '25'
     symptom_ids = symptom_names.map(value => get_symptom(value).ID)
     console.log(symptom_ids)
@@ -106,7 +107,8 @@ function get_disease_info(disease_id, cb){
 
 
 function get_suggestions(symptom_names, age, gender, cb){
-    if(gender === undefined) gender = 'male'
+    if(gender === undefined || gender == "Other") gender = 'male'
+    gender = gender.toLowerCase()
     if(age === undefined) age = '25'
     symptom_ids = symptom_names.map(value => get_symptom(value).ID)
     // console.log(symptom_ids)
