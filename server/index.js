@@ -138,7 +138,7 @@ io.on('connection', function(socket){
 									});
 									io.emit('chat_response', response)
 									response = "<div><p> Consult a Doctor!</p></div>"
-									response = response + '<div><a target="_blank" class="btn btn-primary" href="http://localhost:4000"> Message </a>&nbsp&nbsp&nbsp<a target="_blank" class="btn btn-primary" href="http://localhost:4000/videoChat"> Video Call </a></div>';
+									response = response + '<div><a target="_blank" class="btn btn-primary" href="http://192.168.43.96:4000"> Message </a>&nbsp&nbsp&nbsp<a target="_blank" class="btn btn-primary" href="http://192.168.43.96:4000/videoChat"> Video Call </a></div>';
 									io.emit('chat_response',response);
 									state = 'FREE';
 									io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
@@ -194,7 +194,7 @@ io.on('connection', function(socket){
 								});
 								io.emit('chat_response', response)
 								response = "<div><p> Consult a Doctor!</p></div>"
-								response = response + '<div><a target="_blank" class="btn btn-primary" href="http://localhost:4000"> Message </a>&nbsp&nbsp&nbsp<a target="_blank" class="btn btn-primary" href="http://localhost:4000/videoChat"> Video Call </a></div>';
+								response = response + '<div><a target="_blank" class="btn btn-primary" href="http://192.168.43.96:4000"> Message </a>&nbsp&nbsp&nbsp<a target="_blank" class="btn btn-primary" href="http://192.168.43.96:4000/videoChat"> Video Call </a></div>';
 								io.emit('chat_response',response);
 								state = 'FREE';
 								io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
@@ -245,7 +245,7 @@ io.on('connection', function(socket){
 										});
 										io.emit('chat_response', response)
 										response = "<div><p> Consult a Doctor!</p></div>"
-										response = response + '<div><a target="_blank" class="btn btn-primary" href="http://localhost:4000"> Message </a>&nbsp&nbsp&nbsp<a target="_blank" class="btn btn-primary" href="http://localhost:4000/videoChat"> Video Call </a></div>';
+										response = response + '<div><a target="_blank" class="btn btn-primary" href="http://192.168.43.96:4000"> Message </a>&nbsp&nbsp&nbsp<a target="_blank" class="btn btn-primary" href="http://192.168.43.96:4000/videoChat"> Video Call </a></div>';
 										io.emit('chat_response',response);
 										state = 'FREE';
 										io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
