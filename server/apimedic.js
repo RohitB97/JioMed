@@ -151,13 +151,13 @@ function get_disease(query){
 
 
 
-function get_clinics(location, cb){
+function get_clinics(location, keywords, cb){
     request.get({
         url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
         qs: {
             key: 'AIzaSyCKsccWdbCelLikK-oZq6nqQ0lBymKjlCU',
             location: location,
-            keyword: 'hospital + clinic',
+            keyword: 'hospital + clinic + ' + keywords,
             type: 'hospital',
             rankby: 'distance'
         }

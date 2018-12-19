@@ -130,7 +130,7 @@ io.on('connection', function(socket){
 									if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
 								})
 								io.emit('chat_response', response)
-								apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
+								apimedic.get_clinics('19.130784,72.916469',  data[0].Specialisation[0].Name, function(clinic_data){
 									response = 'Specialist Clinics near you:</br>';
 									clinic_data.forEach(function(value, index){
 										response = response +'</br>' + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
@@ -186,7 +186,7 @@ io.on('connection', function(socket){
 							})
 							
 							io.emit('chat_response', response)
-							apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
+							apimedic.get_clinics('19.130784,72.916469',  data[0].Specialisation[0].Name, function(clinic_data){
 								response = 'Specialist Clinics near you:</br>';
 								clinic_data.forEach(function(value, index){
 									response = response +'</br>' + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
@@ -237,7 +237,7 @@ io.on('connection', function(socket){
 										if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
 									})
 									io.emit('chat_response', response)
-									apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
+									apimedic.get_clinics('19.130784,72.916469', data[0].Specialisation[0].Name, function(clinic_data){
 										response = 'Specialist Clinics near you:</br>';
 										clinic_data.forEach(function(value, index){
 											response = response +'</br>' + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
