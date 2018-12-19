@@ -32,13 +32,17 @@ io.on('connection', function(socket){
 				console.log(full_symptoms_list, data)
 				if(data.length == 0){
 					apimedic.get_diagnosis(full_symptoms_list, function(data){
-						var response = "Your diagnosis is:\n";
-						console.log(data)
-						data.forEach(function(value, index){
-							response = response + String(index+1) + ') ' + value.Issue.Name + '\n';
-						})
-						io.emit('chat_response', response)
-						state = 'FREE';
+						if(data.length == 0){
+							io.emit('chat_response', 'No diagnosis available.')
+						} else {
+							var response = "Your diagnosis is:\n";
+							console.log(data)
+							data.forEach(function(value, index){
+								response = response + String(index+1) + ') ' + value.Issue.Name + '\n';
+							})
+							io.emit('chat_response', response)
+							state = 'FREE';
+						}
 					})
 				} else {
 					suggestions_list = data.map(value => value.Name);
@@ -70,21 +74,30 @@ io.on('connection', function(socket){
 					}
 				})
 			} else {
-				symptoms_list = symptoms_list.map(idx => suggestions_list[parseInt(idx)-1])
-				console.log(symptoms_list)
-				symptoms_list.forEach(value => full_symptoms_list.push(value))
-				io.emit('chat_response', "Added symptoms : " + JSON.stringify(symptoms_list))
+				var symptoms_name_list = []
+				symptoms_list.forEach(idx => {
+					idx = parseInt(idx) - 1;
+					if(idx < suggestions_list.length)
+						symptoms_name_list.push(suggestions_list[idx])
+				})
+				console.log(symptoms_name_list)
+				symptoms_name_list.forEach(value => full_symptoms_list.push(value))
+				io.emit('chat_response', "Added symptoms : " + JSON.stringify(symptoms_name_list))
 				apimedic.get_suggestions(full_symptoms_list, function(data){
 					console.log(data);
 					if(data.length == 0){
 						apimedic.get_diagnosis(full_symptoms_list, function(data){
-							var response = "Your diagnosis is:\n";
-							console.log(data)
-							data.forEach(function(value, index){
-								response = response + String(index+1) + ') ' + value.Issue.Name + '\n';
-							})
-							io.emit('chat_response', response)
-							state = 'FREE';
+							if(data.length == 0){
+								io.emit('chat_response', 'No diagnosis available.')
+							} else {
+								var response = "Your diagnosis is:\n";
+								console.log(data)
+								data.forEach(function(value, index){
+									response = response + String(index+1) + ') ' + value.Issue.Name + '\n';
+								})
+								io.emit('chat_response', response)
+								state = 'FREE';
+							}
 						})
 					} else {
 						suggestions_list = data.map(value => value.Name);
