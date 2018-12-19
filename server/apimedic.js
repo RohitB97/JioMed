@@ -123,7 +123,7 @@ function get_suggestions(symptom_names, age, gender, cb){
             language: 'en-gb'
         }
     }, function (error, response, body) {
-        cb(JSON.parse(body).slice(0,3));
+        cb(JSON.parse(body).slice(0,5));
     });
 }
 
