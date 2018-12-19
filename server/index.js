@@ -40,7 +40,7 @@ function dist2(location){
 }
 
 io.on('connection', function(socket){
-	var state = 'FREE'; // FREE -> AGE -> SYMPT -> EXTRA_SYMPT -> DIAGNOSED = FREE or FREE -> INFO -> FREE
+	var state = 'FREE'; // FREE -> AGE -> GENDER -> SYMPT -> EXTRA_SYMPT -> DIAGNOSED = FREE or FREE -> INFO -> FREE
 	var full_symptoms_list = [];
 	var suggestions_list = [];
 	var gender = undefined;
@@ -54,7 +54,7 @@ io.on('connection', function(socket){
 				state = 'INFO'
 			} else {
 				if(gender === undefined || age === undefined){
-					io.emit('chat_response', 'Enter age and gender for diagnosis')
+					io.emit('chat_response', 'Enter age for diagnosis')
 					state = 'AGE'
 				} else {
 					io.emit('chat_response', 'What are your symptoms?')
@@ -62,10 +62,13 @@ io.on('connection', function(socket){
 				}
 			}
 		} else if(state == 'AGE'){
-			var parsed = msg.split(/,|\s/);
-			if(parsed.length > 0) age = parseInt(parsed[0]);
-			if(parsed.length > 1 && parsed[1].length > 0) {
-				if(parsed[1][0].toLowerCase() == 'm')
+			age = parseInt(msg);
+			console.log(age);
+			io.emit('chat_response', 'Enter gender for diagnosis')
+			state = 'GENDER'
+		} else if(state == 'GENDER'){
+			if(msg.length > 0) {
+				if(msg[0].toLowerCase() == 'm')
 					gender = 'male'
 				else
 					gender = 'female'
@@ -73,7 +76,7 @@ io.on('connection', function(socket){
 			console.log(age, gender);
 			io.emit('chat_response', 'What are your symptoms?')
 			state = 'SYMPT'
-		} else if(state == 'INFO'){
+		}else if(state == 'INFO'){
 			var disease = apimedic.get_disease(msg);
 			if(!disease){
 				io.emit('chat_response', 'Sorry, no such disease found')
@@ -111,7 +114,9 @@ io.on('connection', function(socket){
 							suggestions_list = [];
 						} else {
 							apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
-								var response = "Your symptoms were " + String(full_symptoms_list) +"</br>Your diagnosis is:</br>";
+								var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
+								io.emit('chat_response', response)
+								response = "Your diagnosis is:</br>";
 								console.log(data)
 								data.forEach(function(value, index){
 									response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
@@ -121,9 +126,9 @@ io.on('connection', function(socket){
 								io.emit('chat_response', response)
 								apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
 									response = 'Specialist Clinics near you:</br>';
-									clinic_data.forEach(function(value){
-										response = response + '<b>' + value.name + '</b> Distance: ' + dist2(value.geometry.location) +
-											' km</br>' + value.formatted_address + '</br>Phone:' + value.formatted_phone_number+'</br>';
+									clinic_data.forEach(function(value, index){
+										response = response +'</br>' + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
+											' km)</br>' + (value.formatted_address||"Unknown") + '</br>Phone:' + (value.formatted_phone_number||"Unknown")+'</br>';
 									});
 									io.emit('chat_response', response)
 									response = "<div><p> Consult a Doctor!</p></div>"
@@ -134,7 +139,6 @@ io.on('connection', function(socket){
 									full_symptoms_list = [];
 									suggestions_list = [];
 								});
-								
 							})
 						}
 					})
@@ -164,7 +168,9 @@ io.on('connection', function(socket){
 						suggestions_list = [];
 					} else {
 						apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
-							var response = "Your symptoms were " + String(full_symptoms_list) +"</br>Your diagnosis is:</br>";
+							var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
+							io.emit('chat_response', response)
+							response = "Your diagnosis is:</br>";
 							console.log(data)
 							data.forEach(function(value, index){
 								response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
@@ -175,9 +181,9 @@ io.on('connection', function(socket){
 							io.emit('chat_response', response)
 							apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
 								response = 'Specialist Clinics near you:</br>';
-								clinic_data.forEach(function(value){
-									response = response + '<b>' + value.name + '</b> Distance: ' + dist2(value.geometry.location) +
-										' km</br>' + value.formatted_address + '</br>Phone:' + value.formatted_phone_number+'</br>';
+								clinic_data.forEach(function(value, index){
+									response = response +'</br>' + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
+										' km)</br>' + (value.formatted_address||"Unknown") + '</br>Phone:' + (value.formatted_phone_number||"Unknown")+'</br>';
 								});
 								io.emit('chat_response', response)
 								response = "<div><p> Consult a Doctor!</p></div>"
@@ -188,9 +194,7 @@ io.on('connection', function(socket){
 								full_symptoms_list = [];
 								suggestions_list = [];
 							});
-							
 						})
-						
 					}
 				})
 			} else {
@@ -215,7 +219,9 @@ io.on('connection', function(socket){
 								suggestions_list = [];
 							} else {
 								apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
-									var response = "Your symptoms were " + String(full_symptoms_list) +"</br>Your diagnosis is:</br>";
+									var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
+									io.emit('chat_response', response)
+									response = "Your diagnosis is:</br>";
 									console.log(data)
 									data.forEach(function(value, index){
 										response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
@@ -225,9 +231,9 @@ io.on('connection', function(socket){
 									io.emit('chat_response', response)
 									apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
 										response = 'Specialist Clinics near you:</br>';
-										clinic_data.forEach(function(value){
-											response = response + '<b>' + value.name + '</b> Distance: ' + dist2(value.geometry.location) +
-												' km</br>' + value.formatted_address + '</br>Phone:' + value.formatted_phone_number+'</br>';
+										clinic_data.forEach(function(value, index){
+											response = response +'</br>' + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
+												' km)</br>' + (value.formatted_address||"Unknown") + '</br>Phone:' + (value.formatted_phone_number||"Unknown")+'</br>';
 										});
 										io.emit('chat_response', response)
 										response = "<div><p> Consult a Doctor!</p></div>"
@@ -238,7 +244,6 @@ io.on('connection', function(socket){
 										full_symptoms_list = [];
 										suggestions_list = [];
 									});
-									
 								})
 							}
 						})
