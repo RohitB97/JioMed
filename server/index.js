@@ -28,14 +28,21 @@ io.on('connection', function(socket){
 			}
 		} else if(state == 'INFO'){
 			var disease = apimedic.get_disease(msg);
-			apimedic.get_disease_info(disease.ID, function(data){
-				var response = '<b>' + disease.Name + '</b>: ' + data.DescriptionShort + 
-					'</br>Possible Symptoms: ' + data.PossibleSymptoms +
-					'</br>Treatment: ' + data.TreatmentDescription + '</br>'
-				io.emit('chat_response', response)
+			if(!disease){
+				io.emit('chat_response', 'Sorry, no such disease found')
 				state = 'FREE'
 				io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
-			})
+			} else {
+				apimedic.get_disease_info(disease.ID, function(data){
+					console.log(disease, data)
+					var response = '<b>' + disease.Name + '</b>: ' + (data.DescriptionShort || "No Info Found") + 
+						'</br><b>Possible Symptoms</b>: ' + (data.PossibleSymptoms || "No Info Found") +
+						'</br><b>Treatment</b>: ' + (data.TreatmentDescription || "No Info Found") + '</br>'
+					io.emit('chat_response', response)
+					state = 'FREE'
+					io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
+				})
+			}
 		} else if(state == 'SYMPT'){
 			// get initial symptoms list
 			// TODO age, ..
