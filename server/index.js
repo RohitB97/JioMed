@@ -48,6 +48,7 @@ io.on('connection', function(socket){
 	var suggestions_list = [];
 	var gender = undefined;
 	var age = undefined;
+	var response;
 
 	io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 	socket.on('chat_message', function(msg){
@@ -118,8 +119,8 @@ io.on('connection', function(socket){
 							suggestions_list = [];
 						} else {
 							apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
-								var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
-								io.emit('chat_response', response)
+								// var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
+								// io.emit('chat_response', response)
 								response = "Your diagnosis is:</br>";
 								console.log(data)
 								data.forEach(function(value, index){
@@ -173,8 +174,8 @@ io.on('connection', function(socket){
 						suggestions_list = [];
 					} else {
 						apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
-							var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
-							io.emit('chat_response', response)
+							// var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
+							// io.emit('chat_response', response)
 							response = "Your diagnosis is:</br>";
 							console.log(data)
 							data.forEach(function(value, index){
@@ -225,8 +226,8 @@ io.on('connection', function(socket){
 								suggestions_list = [];
 							} else {
 								apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
-									var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
-									io.emit('chat_response', response)
+									// var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
+									// io.emit('chat_response', response)
 									response = "Your diagnosis is:</br>";
 									console.log(data)
 									data.forEach(function(value, index){
