@@ -23,7 +23,7 @@ var socket = io();
         	message_side = message_side === 'right'? 'left': 'right';
         	message = new Message({
         		text: msg,
-        		message_side: message_side
+        		message_side: 'left'
         	});
         	message.draw();
         	$messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
@@ -46,7 +46,7 @@ var socket = io();
             message_side = message_side === 'left' ? 'right' : 'left';
             message = new Message({
                 text: text,
-                message_side: message_side
+                message_side: 'right'
             });
             message.draw();
             socket.emit('chat_message', text);
