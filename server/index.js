@@ -16,13 +16,14 @@ io.on('connection', function(socket){
 	var full_symptoms_list = [];
 	var suggestions_list = [];
 
+	console.log('Hello')
 	io.emit('chat_response', "What are your symptoms?");
 	socket.on('chat_message', function(msg){
 		if(state == 'FREE'){
 			// get initial symptoms list
 			// TODO age, ..
 			var symptoms_list = apimedic.parse_symptoms(msg);
-			io.emit('chat_response', "Got symptoms " + String(symptoms_list));
+			// io.emit('chat_response', "Got symptoms " + String(symptoms_list));
 			full_symptoms_list = symptoms_list.slice();
 
 			// give user suggestions
@@ -81,7 +82,7 @@ io.on('connection', function(socket){
 				})
 				console.log(symptoms_name_list)
 				symptoms_name_list.forEach(value => full_symptoms_list.push(value))
-				io.emit('chat_response', "Added symptoms : " + JSON.stringify(symptoms_name_list))
+				// io.emit('chat_response', "Added symptoms : " + JSON.stringify(symptoms_name_list))
 				apimedic.get_suggestions(full_symptoms_list, function(data){
 					console.log(data);
 					if(data.length == 0){
