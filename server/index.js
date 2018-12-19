@@ -14,7 +14,9 @@ app.get('/',function(req,res){
 io.on('connection', function(socket){
 	var state = 'FREE'; // FREE -> EXTRA_SYMPT -> DIAGNOSED = FREE
 	var full_symptoms_list = [];
-	io.emit('chat_response', "What are your symptoms");
+	var suggestions_list = [];
+
+	io.emit('chat_response', "What are your symptoms?");
 	socket.on('chat_message', function(msg){
 		if(state == 'FREE'){
 			// get initial symptoms list
@@ -23,38 +25,76 @@ io.on('connection', function(socket){
 			io.emit('chat_response', "Got symptoms " + String(symptoms_list));
 			full_symptoms_list = symptoms_list.slice();
 
-			if(full_symptoms_list.length < 5){
-				// give user suggestions
-				apimedic.get_suggestions(full_symptoms_list, function(data){
+			// give user suggestions
+			apimedic.get_suggestions(full_symptoms_list, function(data){
+				
+				console.log(full_symptoms_list, data)
+				if(data.length == 0){
+					apimedic.get_diagnosis(full_symptoms_list, function(data){
+						var response = "Your diagnosis is:\n";
+						console.log(data)
+						data.forEach(function(value, index){
+							response = response + String(index+1) + ') ' + value.Issue.Name + '\n';
+						})
+						io.emit('chat_response', response)
+						state = 'FREE';
+					})
+				} else {
+					suggestions_list = data.map(value => value.Name);
 					var response = "Do you have these other symptoms: ";
-					// console.log(data)
 					data.forEach(function(value, index){
 						response = response + String(index+1) + ') ' + value.Name + ' ';
 					})
+					response = response + String(data.length+1) + ') None ';
 					io.emit('chat_response', response)
 					state = 'EXTRA_SYMPT';
-				})
-			} else {
-				apimedic.get_diagnosis(full_symptoms_list, function(data){
-					io.emit('chat_response', "Your diagnosis is : " + JSON.stringify(data))
-					state = 'FREE';
-				})
-
-			}
-			
+				}
+			})
 		} else if(state == 'EXTRA_SYMPT'){
-			if(msg == "no" || full_symptoms_list.length >= 5){
+			var symptoms_list = apimedic.parse_list(msg);
+			console.log(symptoms_list)
+			if(symptoms_list.length == 1 && parseInt(symptoms_list[0]) == (suggestions_list.length + 1)){
+				// None
 				apimedic.get_diagnosis(full_symptoms_list, function(data){
-					io.emit('chat_response', "Your diagnosis is : " + JSON.stringify(data))
-					state = 'FREE';
+					if(data.length == 0){
+						io.emit('chat_response', 'No diagnosis available.')
+					} else {
+						var response = "Your diagnosis is:\n";
+						console.log(data)
+						data.forEach(function(value, index){
+							response = response + String(index+1) + ') ' + value.Issue.Name + '\n';
+						})
+						io.emit('chat_response', response)
+						state = 'FREE';
+					}
 				})
 			} else {
-				var symptoms_list = apimedic.parse_symptoms(msg);
-				symptoms_list.forEach(symptom => full_symptoms_list.push(symptom))
+				symptoms_list = symptoms_list.map(idx => suggestions_list[parseInt(idx)-1])
+				console.log(symptoms_list)
+				symptoms_list.forEach(value => full_symptoms_list.push(value))
 				io.emit('chat_response', "Added symptoms : " + JSON.stringify(symptoms_list))
 				apimedic.get_suggestions(full_symptoms_list, function(data){
-					io.emit('chat_response', "Do you have these other symptoms: " + JSON.stringify(data))
-					state = 'EXTRA_SYMPT';
+					console.log(data);
+					if(data.length == 0){
+						apimedic.get_diagnosis(full_symptoms_list, function(data){
+							var response = "Your diagnosis is:\n";
+							console.log(data)
+							data.forEach(function(value, index){
+								response = response + String(index+1) + ') ' + value.Issue.Name + '\n';
+							})
+							io.emit('chat_response', response)
+							state = 'FREE';
+						})
+					} else {
+						suggestions_list = data.map(value => value.Name);
+						var response = "Do you have these other symptoms: ";
+						data.forEach(function(value, index){
+							response = response + String(index+1) + ') ' + value.Name + ' ';
+						})
+						response = response + String(data.length+1) + ') None ';
+						io.emit('chat_response', response)
+						state = 'EXTRA_SYMPT';
+					}
 				})
 			}
 		}

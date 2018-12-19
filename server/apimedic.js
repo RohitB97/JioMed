@@ -40,25 +40,25 @@ var fuse_options_weak = {
 var fuse = new Fuse(symptoms, fuse_options);
 var fuse_weak = new Fuse(symptoms, fuse_options_weak);
 
-function get_symptom_id(symptom_name){
+function get_symptom(symptom_name,){
     var search_res = fuse.search(symptom_name);
-    // console.log(search_res)
-    if(search_res.length > 0)
-        return search_res[0].item.ID;
-    else{
+    console.log(search_res)
+    if(search_res.length > 0){
+        return search_res[0].item
+    }else{
         weak_search = fuse_weak.search(symptom_name).slice(0,10);
-        
         // console.log(weak_search)
-        if(weak_search.length > 0)
-            return weak_search[0].item.ID;
-        else
-            return -1;
+        if(weak_search.length > 0){
+            return weak_search[0].item
+        } else {
+            return undefined;
+        }
     } 
-        
 }
 
 function get_diagnosis(symptom_names, cb){
-    symptom_ids = symptom_names.map(get_symptom_id)
+    symptom_ids = symptom_names.map(value => get_symptom(value).ID)
+    console.log(symptom_ids)
     request.get({
         url: 'https://sandbox-healthservice.priaid.ch/diagnosis',
         qs: {
@@ -75,7 +75,7 @@ function get_diagnosis(symptom_names, cb){
 }
 
 function get_suggestions(symptom_names, cb){
-    symptom_ids = symptom_names.map(get_symptom_id)
+    symptom_ids = symptom_names.map(value => get_symptom(value).ID)
     // console.log(symptom_ids)
     request.get({
         url: 'https://sandbox-healthservice.priaid.ch/symptoms/proposed',
@@ -92,14 +92,19 @@ function get_suggestions(symptom_names, cb){
     });
 }
 
-function parse_symptoms(query){
+function parse_list(query){
     // split ',' 'and'
     return query.split(/,and|\sand|,/i)
 }
 
+function parse_symptoms(query){
+    query = parse_list(query);
+    return query.map(value => get_symptom(value).Name)
+}
+
 // get_symptom_list();
-// console.log(get_symptom_id('headache'))
-// // console.log(get_diagnosis(['abdominal pain', 'vomiting'], data => {console.log(data);}))
+// console.log(get_symptom('headache'))
+// console.log(get_diagnosis(['abdominal pain', 'vomiting'], data => {console.log(data);}))
 // get_suggestions(['vomit', 'fever', 'cough', 'sore throat'], data => {console.log('suggestions: ', data);})
 // get_diagnosis(['cough', 'fever', 'runny nose'], data => {console.log(data);})
 // console.log(parse_symptoms('cough,hand ,and fever'))
@@ -109,5 +114,6 @@ function parse_symptoms(query){
 module.exports = {
     get_diagnosis: get_diagnosis, 
     parse_symptoms: parse_symptoms,
-    get_suggestions: get_suggestions
+    get_suggestions: get_suggestions,
+    parse_list: parse_list
 }
