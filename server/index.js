@@ -12,9 +12,11 @@ app.get('/',function(req,res){
 });
 
 io.on('connection', function(socket){
-	var state = 'FREE'; // FREE -> SYMPT -> EXTRA_SYMPT -> DIAGNOSED = FREE or FREE -> INFO -> FREE
+	var state = 'FREE'; // FREE -> AGE -> SYMPT -> EXTRA_SYMPT -> DIAGNOSED = FREE or FREE -> INFO -> FREE
 	var full_symptoms_list = [];
 	var suggestions_list = [];
+	var gender = undefined;
+	var age = undefined;
 
 	io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 	socket.on('chat_message', function(msg){
@@ -23,9 +25,26 @@ io.on('connection', function(socket){
 				io.emit('chat_response', 'What disease would you like information about?')
 				state = 'INFO'
 			} else {
-				io.emit('chat_response', 'What are your symptoms?')
-				state = 'SYMPT'
+				if(gender === undefined || age === undefined){
+					io.emit('chat_response', 'Enter age and gender for diagnosis')
+					state = 'AGE'
+				} else {
+					io.emit('chat_response', 'What are your symptoms?')
+					state = 'SYMPT'
+				}
 			}
+		} else if(state == 'AGE'){
+			var parsed = msg.split(/,|\s/);
+			if(parsed.length > 0) age = parseInt(parsed[0]);
+			if(parsed.length > 1 && parsed[1].length > 0) {
+				if(parsed[1][0].toLowerCase() == 'm')
+					gender = 'male'
+				else
+					gender = 'female'
+			}
+			console.log(age, gender);
+			io.emit('chat_response', 'What are your symptoms?')
+			state = 'SYMPT'
 		} else if(state == 'INFO'){
 			var disease = apimedic.get_disease(msg);
 			if(!disease){
@@ -51,11 +70,11 @@ io.on('connection', function(socket){
 			full_symptoms_list = symptoms_list.slice();
 
 			// give user suggestions
-			apimedic.get_suggestions(full_symptoms_list, function(data){
+			apimedic.get_suggestions(full_symptoms_list, age, gender, function(data){
 				
 				console.log(full_symptoms_list, data)
 				if(data.length == 0){
-					apimedic.get_diagnosis(full_symptoms_list, function(data){
+					apimedic.get_diagnosis(full_symptoms_list, age, gender, function(data){
 						if(data.length == 0){
 							io.emit('chat_response', 'No diagnosis available.')
 							state = 'FREE';
@@ -92,7 +111,7 @@ io.on('connection', function(socket){
 			console.log(full_symptoms_list, symptoms_list)
 			if(full_symptoms_list.length > 5 || (symptoms_list.length == 1 && parseInt(symptoms_list[0]) == (suggestions_list.length + 1))){
 				// None
-				apimedic.get_diagnosis(full_symptoms_list, function(data){
+				apimedic.get_diagnosis(full_symptoms_list, age, gender, function(data){
 					console.log(full_symptoms_list, data)
 					if(data.length == 0){
 						io.emit('chat_response', 'No diagnosis available.')
@@ -129,10 +148,10 @@ io.on('connection', function(socket){
 				console.log(symptoms_name_list)
 				symptoms_name_list.forEach(value => full_symptoms_list.push(value))
 				// io.emit('chat_response', "Added symptoms : " + JSON.stringify(symptoms_name_list))
-				apimedic.get_suggestions(full_symptoms_list, function(data){
+				apimedic.get_suggestions(full_symptoms_list, age, gender, function(data){
 					console.log(data);
 					if(data.length == 0){
-						apimedic.get_diagnosis(full_symptoms_list, function(data){
+						apimedic.get_diagnosis(full_symptoms_list, age, gender, function(data){
 							if(data.length == 0){
 								io.emit('chat_response', 'No diagnosis available.')
 								state = 'FREE';

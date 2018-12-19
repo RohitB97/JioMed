@@ -69,15 +69,17 @@ function get_symptom(symptom_name){
     } 
 }
 
-function get_diagnosis(symptom_names, cb){
+function get_diagnosis(symptom_names, age, gender, cb){
+    if(gender === undefined) gender = 'male'
+    if(age === undefined) age = '25'
     symptom_ids = symptom_names.map(value => get_symptom(value).ID)
     console.log(symptom_ids)
     request.get({
         url: base_url_sand + '/diagnosis',
         qs: {
             symptoms: JSON.stringify(symptom_ids),
-            gender: 'male',
-            year_of_birth: 1996,
+            gender: gender,
+            year_of_birth: 2018 - age,
             token: API_KEY_sand,
             format: 'json',
             language: 'en-gb'
@@ -102,15 +104,17 @@ function get_disease_info(disease_id, cb){
 }
 
 
-function get_suggestions(symptom_names, cb){
+function get_suggestions(symptom_names, age, gender, cb){
+    if(gender === undefined) gender = 'male'
+    if(age === undefined) age = '25'
     symptom_ids = symptom_names.map(value => get_symptom(value).ID)
     // console.log(symptom_ids)
     request.get({
         url: base_url_sand + '/symptoms/proposed',
         qs: {
             symptoms: JSON.stringify(symptom_ids),
-            gender: 'male',
-            year_of_birth: 1996,
+            gender: gender,
+            year_of_birth: 2018 - age,
             token: API_KEY_sand,
             format: 'json',
             language: 'en-gb'
