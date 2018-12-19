@@ -27,6 +27,7 @@ function get_symptom_list(){
 }
 
 var symptoms = JSON.parse(fs.readFileSync(SERVER_ROOT+'/server/symptoms.json'));
+var diseases = JSON.parse(fs.readFileSync(SERVER_ROOT+'/server/diseases.json'));
 var fuse_options = {
     shouldSort: true,
     includeScore: true,
@@ -39,10 +40,17 @@ var fuse_options_weak = {
     tokenize: true,
     keys: ['Name']
 }
+var fuse_d_options = {
+    shouldSort: true,
+    includeScore: true,
+    threshold: 1.0,
+    keys: ['Name']
+}
 var fuse = new Fuse(symptoms, fuse_options);
 var fuse_weak = new Fuse(symptoms, fuse_options_weak);
+var fuse_diseases = new Fuse(diseases, fuse_d_options);
 
-function get_symptom(symptom_name,){
+function get_symptom(symptom_name){
     var search_res = fuse.search(symptom_name);
     console.log(search_res)
     if(search_res.length > 0){
@@ -118,6 +126,17 @@ function parse_symptoms(query){
     return query.map(value => get_symptom(value).Name)
 }
 
+function is_disease(query){
+    if(fuse_diseases.search(query).length > 0) return false;
+    return true;
+}
+
+function get_disease(query){
+    var result = fuse_diseases.search(query).slice(0,10)
+    console.log(result)
+    if(result.length > 0) return result[0].item;
+    else return undefined;
+}
 // get_symptom_list();
 // console.log(get_symptom('headache'))
 // console.log(get_diagnosis(['abdominal pain', 'vomiting'], data => {console.log(data);}))
@@ -133,5 +152,6 @@ module.exports = {
     parse_symptoms: parse_symptoms,
     get_suggestions: get_suggestions,
     parse_list: parse_list,
-    get_disease_info: get_disease_info
+    get_disease_info: get_disease_info,
+    get_disease: get_disease
 }
