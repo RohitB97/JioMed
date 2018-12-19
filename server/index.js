@@ -114,7 +114,9 @@ io.on('connection', function(socket){
 							suggestions_list = [];
 						} else {
 							apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
-								var response = "Your symptoms were " + String(full_symptoms_list) +"</br>Your diagnosis is:</br>";
+								var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
+								io.emit('chat_response', response)
+								response = "Your diagnosis is:</br>";
 								console.log(data)
 								data.forEach(function(value, index){
 									response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
@@ -126,8 +128,8 @@ io.on('connection', function(socket){
 								apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
 									response = 'Specialist Clinics near you:</br>';
 									clinic_data.forEach(function(value, index){
-										response = response + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
-											' km)</br>' + value.formatted_address + '</br>Phone:' + value.formatted_phone_number+'</br></br>';
+										response = response +'</br>' + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
+											' km)</br>' + (value.formatted_address||"Unknown") + '</br>Phone:' + (value.formatted_phone_number||"Unknown")+'</br>';
 									});
 									io.emit('chat_response', response)
 									state = 'FREE';
@@ -164,7 +166,9 @@ io.on('connection', function(socket){
 						suggestions_list = [];
 					} else {
 						apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
-							var response = "Your symptoms were " + String(full_symptoms_list) +"</br>Your diagnosis is:</br>";
+							var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
+							io.emit('chat_response', response)
+							response = "Your diagnosis is:</br>";
 							console.log(data)
 							data.forEach(function(value, index){
 								response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
@@ -176,8 +180,8 @@ io.on('connection', function(socket){
 							apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
 								response = 'Specialist Clinics near you:</br>';
 								clinic_data.forEach(function(value, index){
-									response = response + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
-										' km)</br>' + value.formatted_address + '</br>Phone:' + value.formatted_phone_number+'</br></br>';
+									response = response +'</br>' + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
+										' km)</br>' + (value.formatted_address||"Unknown") + '</br>Phone:' + (value.formatted_phone_number||"Unknown")+'</br>';
 								});
 								io.emit('chat_response', response)
 								state = 'FREE';
@@ -210,7 +214,9 @@ io.on('connection', function(socket){
 								suggestions_list = [];
 							} else {
 								apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
-									var response = "Your symptoms were " + String(full_symptoms_list) +"</br>Your diagnosis is:</br>";
+									var response = "Age: " + age + " Gender: " + gender + "</br>Symptoms: " + String(full_symptoms_list)
+									io.emit('chat_response', response)
+									response = "Your diagnosis is:</br>";
 									console.log(data)
 									data.forEach(function(value, index){
 										response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
@@ -222,8 +228,8 @@ io.on('connection', function(socket){
 									apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
 										response = 'Specialist Clinics near you:</br>';
 										clinic_data.forEach(function(value, index){
-											response = response + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
-												' km)</br>' + value.formatted_address + '</br>Phone:' + value.formatted_phone_number+'</br></br>';
+											response = response +'</br>' + String(index+1) + ') <b>' + value.name + '</b> (Distance: ' + dist2(value.geometry.location) +
+												' km)</br>' + (value.formatted_address||"Unknown") + '</br>Phone:' + (value.formatted_phone_number||"Unknown")+'</br>';
 										});
 										io.emit('chat_response', response)
 										state = 'FREE';
