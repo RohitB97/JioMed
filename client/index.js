@@ -18,6 +18,7 @@ var socket = io();
         return this;
     };
     $(function () {
+    	$messages = $('.messages');
     	socket.on('chat_response', function(msg){
         	message_side = message_side === 'right'? 'left': 'right';
         	message = new Message({
@@ -25,7 +26,9 @@ var socket = io();
         		message_side: message_side
         	});
         	message.draw();
+        	$messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         })
+
         var getMessageText, message_side, sendMessage;
         message_side = 'right';
         getMessageText = function () {
