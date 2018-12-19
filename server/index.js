@@ -67,16 +67,20 @@ io.on('connection', function(socket){
 					if(data.length == 0){
 						io.emit('chat_response', 'No diagnosis available.')
 					} else {
-						var response = "Your diagnosis is:</br>";
-						console.log(data)
-						data.forEach(function(value, index){
-							response = response + String(index+1) + ') ' + value.Issue.Name + '</br>' 
-							response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
+						apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
+							var response = "Your diagnosis is:</br>";
+							console.log(data)
+							data.forEach(function(value, index){
+								response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
+								response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
+								if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
+							})
+							io.emit('chat_response', response)
+							state = 'FREE';
+							full_symptoms_list = [];
+							suggestions_list = [];
 						})
-						io.emit('chat_response', response)
-						state = 'FREE';
-						full_symptoms_list = [];
-						suggestions_list = [];
+						
 					}
 				})
 			} else {
