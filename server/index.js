@@ -110,17 +110,30 @@ io.on('connection', function(socket){
 							full_symptoms_list = [];
 							suggestions_list = [];
 						} else {
-							var response = "Your diagnosis is:</br>";
-							console.log(data)
-							data.forEach(function(value, index){
-								response = response + String(index+1) + ') ' + value.Issue.Name + '</br>' 
-								response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
+							apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
+								var response = "Your symptoms were " + String(full_symptoms_list) +"</br>Your diagnosis is:</br>";
+								console.log(data)
+								data.forEach(function(value, index){
+									response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
+									response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
+									if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
+								})
+								response = response + '<a href="#"> Chat with a doctor </a>';
+								io.emit('chat_response', response)
+								apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
+									response = 'Specialist Clinics near you:</br>';
+									clinic_data.forEach(function(value){
+										response = response + '<b>' + value.name + '</b> Distance: ' + dist2(value.geometry.location) +
+											' km</br>' + value.formatted_address + '</br>Phone:' + value.formatted_phone_number+'</br>';
+									});
+									io.emit('chat_response', response)
+									state = 'FREE';
+									io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
+									full_symptoms_list = [];
+									suggestions_list = [];
+								});
+								
 							})
-							io.emit('chat_response', response)
-							state = 'FREE';
-							io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
-							full_symptoms_list = [];
-							suggestions_list = [];
 						}
 					})
 				} else {
@@ -149,7 +162,7 @@ io.on('connection', function(socket){
 						suggestions_list = [];
 					} else {
 						apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
-							var response = "Your diagnosis is:</br>";
+							var response = "Your symptoms were " + String(full_symptoms_list) +"</br>Your diagnosis is:</br>";
 							console.log(data)
 							data.forEach(function(value, index){
 								response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
@@ -196,18 +209,30 @@ io.on('connection', function(socket){
 							full_symptoms_list = [];
 								suggestions_list = [];
 							} else {
-								var response = "Your diagnosis is:</br>";
-								console.log(data)
-								data.forEach(function(value, index){
-									response = response + String(index+1) + ') ' + value.Issue.Name + '</br>' 
-									response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
+								apimedic.get_disease_info(data[0].Issue.ID, function(disease_info){
+									var response = "Your symptoms were " + String(full_symptoms_list) +"</br>Your diagnosis is:</br>";
+									console.log(data)
+									data.forEach(function(value, index){
+										response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
+										response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
+										if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
+									})
+									response = response + '<a href="#"> Chat with a doctor </a>';
+									io.emit('chat_response', response)
+									apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
+										response = 'Specialist Clinics near you:</br>';
+										clinic_data.forEach(function(value){
+											response = response + '<b>' + value.name + '</b> Distance: ' + dist2(value.geometry.location) +
+												' km</br>' + value.formatted_address + '</br>Phone:' + value.formatted_phone_number+'</br>';
+										});
+										io.emit('chat_response', response)
+										state = 'FREE';
+										io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
+										full_symptoms_list = [];
+										suggestions_list = [];
+									});
+									
 								})
-								io.emit('chat_response', response)
-								
-								state = 'FREE';
-								io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
-							full_symptoms_list = [];
-								suggestions_list = [];
 							}
 						})
 					} else {
