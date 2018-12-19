@@ -124,7 +124,6 @@ io.on('connection', function(socket){
 									response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
 									if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
 								})
-								response = response + '<a href="#"> Chat with a doctor </a>';
 								io.emit('chat_response', response)
 								apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
 									response = 'Specialist Clinics near you:</br>';
@@ -133,6 +132,9 @@ io.on('connection', function(socket){
 											' km)</br>' + (value.formatted_address||"Unknown") + '</br>Phone:' + (value.formatted_phone_number||"Unknown")+'</br>';
 									});
 									io.emit('chat_response', response)
+									response = "<div><p> Consult a Doctor!</p></div>"
+									response = response + '<div><a target="_blank" class="btn btn-primary" href="http://localhost:4000"> Message </a>&nbsp&nbsp&nbsp<a target="_blank" class="btn btn-primary" href="http://localhost:4000/videoChat"> Video Call </a></div>';
+									io.emit('chat_response',response);
 									state = 'FREE';
 									io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 									full_symptoms_list = [];
@@ -186,7 +188,7 @@ io.on('connection', function(socket){
 								});
 								io.emit('chat_response', response)
 								response = "<div><p> Consult a Doctor!</p></div>"
-								response = response + '<div><a class="btn btn-primary" href="http://localhost:4000"> Message </a>&nbsp&nbsp&nbsp<a class="btn btn-primary" href="http://localhost:4000"> Video Call </a></div>';
+								response = response + '<div><a target="_blank" class="btn btn-primary" href="http://localhost:4000"> Message </a>&nbsp&nbsp&nbsp<a target="_blank" class="btn btn-primary" href="http://localhost:4000/videoChat"> Video Call </a></div>';
 								io.emit('chat_response',response);
 								state = 'FREE';
 								io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
@@ -227,7 +229,6 @@ io.on('connection', function(socket){
 										response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
 										if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
 									})
-									response = response + '<a href="#"> Chat with a doctor </a>';
 									io.emit('chat_response', response)
 									apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
 										response = 'Specialist Clinics near you:</br>';
@@ -236,6 +237,9 @@ io.on('connection', function(socket){
 												' km)</br>' + (value.formatted_address||"Unknown") + '</br>Phone:' + (value.formatted_phone_number||"Unknown")+'</br>';
 										});
 										io.emit('chat_response', response)
+										response = "<div><p> Consult a Doctor!</p></div>"
+										response = response + '<div><a target="_blank" class="btn btn-primary" href="http://localhost:4000"> Message </a>&nbsp&nbsp&nbsp<a target="_blank" class="btn btn-primary" href="http://localhost:4000/videoChat"> Video Call </a></div>';
+										io.emit('chat_response',response);
 										state = 'FREE';
 										io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 										full_symptoms_list = [];
