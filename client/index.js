@@ -18,6 +18,14 @@ var socket = io();
         return this;
     };
     $(function () {
+    	socket.on('chat_response', function(msg){
+        	message_side = message_side === 'right'? 'left': 'right';
+        	message = new Message({
+        		text: msg,
+        		message_side: message_side
+        	});
+        	message.draw();
+        })
         var getMessageText, message_side, sendMessage;
         message_side = 'right';
         getMessageText = function () {
@@ -41,14 +49,14 @@ var socket = io();
             socket.emit('chat_message', text);
             	console.log('comes here')
             
-            socket.on('chat_response', function(msg){
-            	message_side = message_side === 'right'? 'left': 'right';
-            	message = new Message({
-            		text: msg,
-            		message_side: message_side
-            	});
-            	message.draw();
-            })
+            // socket.on('chat_response', function(msg){
+            // 	message_side = message_side === 'right'? 'left': 'right';
+            // 	message = new Message({
+            // 		text: msg,
+            // 		message_side: message_side
+            // 	});
+            // 	message.draw();
+            // })
             return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         };
         $('.send_message').click(function (e) {
