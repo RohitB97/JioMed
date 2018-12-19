@@ -1,4 +1,5 @@
 var request = require('request');
+var rp = require('request-promise');
 var fs = require('fs');
 var Fuse = require('fuse.js');
 var path = require('path');
@@ -145,6 +146,50 @@ function get_disease(query){
     if(result.length > 0) return result[0].item;
     else return undefined;
 }
+
+
+
+function get_clinics(location, cb){
+    request.get({
+        url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
+        qs: {
+            key: 'AIzaSyCKsccWdbCelLikK-oZq6nqQ0lBymKjlCU',
+            location: location,
+            keyword: 'hospital + clinic',
+            type: 'hospital',
+            rankby: 'distance'
+        }
+    }, function (error, response, body) {
+        var results = JSON.parse(body).results.slice(0,3);
+        var hospitals = []
+        var hospital_prs = []
+        results.forEach((value) => {
+            var hloc = value.geometry.location;
+            var placeid = value.place_id;
+            hospital_prs.push(rp.get({
+                url: 'https://maps.googleapis.com/maps/api/place/details/json',
+                qs: {
+                    key: 'AIzaSyCKsccWdbCelLikK-oZq6nqQ0lBymKjlCU',
+                    placeid: placeid,
+                    fields: 'name,geometry/location,formatted_address,formatted_phone_number'
+                },
+                json: true
+            }).promise());
+        })
+        Promise.all(hospital_prs).then(function(values){
+            values.forEach(function(value, idx){
+                // console.log(value.result.geometry)
+                if(value.result){
+                    hospitals.push(value.result);
+                }
+            })
+            cb(hospitals);
+        })
+        
+    });
+}
+
+// get_clinics('19.130784,72.916469', (data) => {console.log(data);})
 // get_symptom_list();
 // console.log(get_symptom('headache'))
 // console.log(get_diagnosis(['abdominal pain', 'vomiting'], data => {console.log(data);}))
@@ -161,5 +206,6 @@ module.exports = {
     get_suggestions: get_suggestions,
     parse_list: parse_list,
     get_disease_info: get_disease_info,
-    get_disease: get_disease
+    get_disease: get_disease,
+    get_clinics: get_clinics
 }

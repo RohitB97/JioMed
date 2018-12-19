@@ -11,6 +11,34 @@ app.get('/',function(req,res){
 	res.sendFile(path.resolve(__dirname,"../client/index.html"));
 });
 
+function distance(lat1, lon1, lat2, lon2, unit) {
+	if ((lat1 == lat2) && (lon1 == lon2)) {
+		return 0;
+	}
+	else {
+		var radlat1 = Math.PI * lat1/180;
+		var radlat2 = Math.PI * lat2/180;
+		var theta = lon1-lon2;
+		var radtheta = Math.PI * theta/180;
+		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+		if (dist > 1) {
+			dist = 1;
+		}
+		dist = Math.acos(dist);
+		dist = dist * 180/Math.PI;
+		dist = dist * 60 * 1.1515;
+		if (unit=="K") { dist = dist * 1.609344 }
+		if (unit=="N") { dist = dist * 0.8684 }
+		return dist;
+	}
+}
+function dist2(location){
+	var lat = location.lat
+	var lon = location.lng
+	var dist = distance(lat, lon, 19.130784,72.916469, 'K');
+	return Math.round(dist * 100) / 100
+}
+
 io.on('connection', function(socket){
 	var state = 'FREE'; // FREE -> AGE -> SYMPT -> EXTRA_SYMPT -> DIAGNOSED = FREE or FREE -> INFO -> FREE
 	var full_symptoms_list = [];
@@ -130,10 +158,19 @@ io.on('connection', function(socket){
 							})
 							response = response + '<a href="#"> Chat with a doctor </a>';
 							io.emit('chat_response', response)
-							state = 'FREE';
-							io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
-							full_symptoms_list = [];
-							suggestions_list = [];
+							apimedic.get_clinics('19.130784,72.916469', function(clinic_data){
+								response = 'Specialist Clinics near you:</br>';
+								clinic_data.forEach(function(value){
+									response = response + '<b>' + value.name + '</b> Distance: ' + dist2(value.geometry.location) +
+										' km</br>' + value.formatted_address + '</br>Phone:' + value.formatted_phone_number+'</br>';
+								});
+								io.emit('chat_response', response)
+								state = 'FREE';
+								io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
+								full_symptoms_list = [];
+								suggestions_list = [];
+							});
+							
 						})
 						
 					}
@@ -166,6 +203,7 @@ io.on('connection', function(socket){
 									response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
 								})
 								io.emit('chat_response', response)
+								
 								state = 'FREE';
 								io.emit('chat_response', "Would you like to </br>1) Diagnose your Symptoms</br>2) Check Disease Information");
 							full_symptoms_list = [];
