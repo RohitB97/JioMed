@@ -32,11 +32,14 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 		return dist;
 	}
 }
+function round2(x){
+	return Math.round(x * 100) / 100
+}
 function dist2(location){
 	var lat = location.lat
 	var lon = location.lng
 	var dist = distance(lat, lon, 19.130784,72.916469, 'K');
-	return Math.round(dist * 100) / 100
+	return round2(dist)
 }
 
 io.on('connection', function(socket){
@@ -120,7 +123,8 @@ io.on('connection', function(socket){
 								response = "Your diagnosis is:</br>";
 								console.log(data)
 								data.forEach(function(value, index){
-									response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
+									response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> ('+ 
+										String(round2(value.Issue.Accuracy)) + '%) - ';
 									response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
 									if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
 								})
@@ -174,7 +178,8 @@ io.on('connection', function(socket){
 							response = "Your diagnosis is:</br>";
 							console.log(data)
 							data.forEach(function(value, index){
-								response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
+								response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> ('+ 
+									String(round2(value.Issue.Accuracy)) + '%) - ';
 								response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
 								if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
 							})
@@ -225,7 +230,8 @@ io.on('connection', function(socket){
 									response = "Your diagnosis is:</br>";
 									console.log(data)
 									data.forEach(function(value, index){
-										response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> - ';
+										response = response + String(index+1) + ') <b>' + value.Issue.Name + '</b> ('+ 
+											String(round2(value.Issue.Accuracy)) + '%) - ';
 										response = response + 'See a ' + value.Specialisation[0].Name + ' specialist</br>';
 										if(index == 0) response = response + disease_info.DescriptionShort + '</br>';
 									})
