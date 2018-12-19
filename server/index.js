@@ -16,7 +16,6 @@ io.on('connection', function(socket){
 	var full_symptoms_list = [];
 	var suggestions_list = [];
 
-	console.log('Hello')
 	io.emit('chat_response', "What are your symptoms?");
 	socket.on('chat_message', function(msg){
 		if(state == 'FREE'){
